@@ -1,10 +1,12 @@
 import React from 'react';
-import {View, Text, StyleSheet, FlatList } from 'react-native';
-import { bold } from 'ansi-colors';
+import {withNavigation} from 'react-navigation';
+import {View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import ResultsDetail from './ResultDetail';
 
-const resultslist = ({title, results}) => {
- 
+const resultslist = ({title, results, navigation}) => {
+    if(!results.length) {
+        return null;
+    }
     return (
         <View style={styles.container}>
             <Text style={styles.title}>{title}</Text>
@@ -14,7 +16,11 @@ const resultslist = ({title, results}) => {
                 data={results}
                 keyExtractor={result => results.id}
                 renderItem={({item}) => {
-                    return <ResultsDetail result={item}/>
+                    return (
+                    <TouchableOpacity onPress={() => navigation.navigate('ResultsShow', {id: item.id})}>
+                        <ResultsDetail result={item}/>
+                    </TouchableOpacity>
+                    );
                 }} />
         </View>
     );
@@ -32,4 +38,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default resultslist;
+export default withNavigation(resultslist);
